@@ -38,6 +38,10 @@ While Cypress allows to configure where your tests, fixtures, and support files 
 
 You can modify the folder configuration in your `cypress.json`. See {% url 'configuration' configuration %} for more detail.
 
+{% note info "What files should I add to my '.gitignore file' ?" %}
+Cypress will create a {% url `screenshotsFolder` configuration#Screenshots %} and a {% url `videosFolder` configuration#Videos %} to store the screenshots and videos taken during the testing of your application. Many users will opt to add these folders to their `.gitignore` file. Additionally, if you are storing sensitive environment variables in your `cypress.json` or `cypress.env.json`, these should also be ignored when you check into source control.  
+{% endnote %}
+
 ## Fixture Files
 
 Fixtures are used as external pieces of static data that can be used by your tests.
@@ -71,9 +75,26 @@ By default Cypress will automatically include the plugins file `cypress/plugins/
 
 ## Support file
 
-By default Cypress will automatically include the support file `cypress/support/index.js` **before** every single spec file it runs. We do this purely as a convenience mechanism so you don't have to import this file in every single one of your spec files.
+By default Cypress will automatically include the support file `cypress/support/index.js`. This file runs **before** every single spec file . We do this purely as a convenience mechanism so you don't have to import this file in every single one of your spec files.
 
 The support file is a great place to put reusable behavior such as Custom Commands or global overrides that you want applied and available to all of your spec files.
+
+You can define your behaviors in a `beforeEach` within any of the `cypress/support` files:
+
+```javascript
+beforeEach(function () {
+  cy.log("I run before every test in every spec file!!!!!!")
+})
+```
+![global hooks](/img/guides/global-hooks.png)
+
+{% note info %}
+**Note:** This example assumes you are already familiar with Mocha {% url 'hooks' writing-and-organizing-tests#Hooks %}. 
+{% endnote %}
+
+{% note danger%}
+{% fa fa-warning %} Keep in mind, setting something in global hook will render it less flexible for changes and for testing its behavior down the road. 
+{% endnote %}
 
 From your support file you should also `import` or `require` other files to keep things organized.
 
